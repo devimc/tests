@@ -170,7 +170,10 @@ func DockerImages(args ...string) (string, string, int) {
 
 // DockerRmi removes one or more images
 func DockerRmi(args ...string) (string, string, int) {
-	return runDockerCommand("rmi", args...)
+	// docker takes more than 5 seconds to remove an image, it depends
+	// of the image size and this operation does not involve to the
+	// runtime, 15 seconds should be enough to complete this task
+	return runDockerCommandWithTimeout(15, "rmi", args...)
 }
 
 // DockerCp copies files/folders between a container and the local filesystem
@@ -202,4 +205,3 @@ func DockerBuild(args ...string) (string, string, int) {
 func DockerInfo() (string, string, int) {
 	return runDockerCommand("info")
 }
-
